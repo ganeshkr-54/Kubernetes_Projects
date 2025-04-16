@@ -239,3 +239,4 @@ for i in $(seq 1 10); do curl -s --resolve echo.prod.mydomain.com:80:$INGRESS_CO
 ```
 You will get the following output showing that your canary setup is working as expected:
 
+![image](https://github.com/user-attachments/assets/6cd5b96e-0c4a-4f35-82f4-e6d136067b3b)
