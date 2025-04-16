@@ -241,5 +241,18 @@ You will get the following output showing that your canary setup is working as e
 
 ![image](https://github.com/user-attachments/assets/6cd5b96e-0c4a-4f35-82f4-e6d136067b3b)
 
+## Blue Green Deployment
+The blue/green deployment technique enables you to release applications by shifting traffic between two identical environments that are running different versions of the application. Blue/green deployments can mitigate common risks associated with deploying software, such as downtime and rollback capability. 
+![image](https://github.com/user-attachments/assets/87a2b610-db44-495f-83e6-ff60e41b9af5)
+
+### How it works
+Create two identical environments, one for the current app version and one for the new version 
+Test and monitor the new version in the green environment 
+When the new version is stable, switch traffic from the blue environment to the green environment 
+If problems arise, roll back to the blue environment
+
+
 Resources:
+
+
 [Canary Deployment Steps](https://kubernetes.github.io/ingress-nginx/examples/canary/)
