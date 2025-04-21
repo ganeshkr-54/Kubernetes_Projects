@@ -58,6 +58,8 @@ HPA operates by:
 2.  **Evaluating Thresholds:** It compares the current metric values against predefined thresholds.
     
 3.  **Scaling Pods:** If the metric values exceed the thresholds, HPA increases the number of pods. Conversely, if the values drop below the thresholds, it decreases the number of pods.
+![image](https://github.com/user-attachments/assets/9d65ca56-4700-439a-9b13-37bf7b4a686a)
+
 
 Advantages of HPA
 -----------------
@@ -278,7 +280,10 @@ Run the Installation Script: Inside the autoscaler directory, run the installati
 ```
 ./hack/vpa-up.sh
 ```
-This script will install the Vertical Pod Autoscaler components, including custom resources, controllers, and other required resources, into your Kubernetes cluster.
+This script will install the Vertical Pod Autoscaler components such as Admission Controller, Updater, Recommender into your Kubernetes cluster.
+![image](https://github.com/user-attachments/assets/994cf1dd-ebdc-4baa-82d2-fd6b6deeea56)
+
+The **Recommender*** analyzes resource usage to suggest optimal CPU and memory requests for pods, while the **Updater** monitors pods and evicts those needing adjustments to resource requests. The **Admission Controller** then ensures that the recommended resource requests are applied to newly created or recreated pods.
 
 Verify Installation: Once the installation script has completed successfully, verify that the VPA components are installed and running in your cluster:
 
@@ -482,6 +487,8 @@ Choosing between HPA and VPA depends on your application’s requirements:
 *   **HPA** is ideal for stateless applications that can easily scale horizontally by adding more pods. It’s useful when you need to handle variable workloads and ensure high availability.
     
 *   **VPA** is suitable for applications where scaling horizontally is not feasible or when you need to optimize resource usage for individual pods. It’s beneficial for stateful applications or those with varying resource needs.
+  ![image](https://github.com/user-attachments/assets/3eb11f69-cfaf-4f8d-94c3-6e3db1f4011c)
+
     
 
 Conclusion
