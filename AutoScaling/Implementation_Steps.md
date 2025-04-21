@@ -21,6 +21,22 @@ $ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/la
 
 ```
 This command fetches the YAML manifest for the latest release of the Metrics Server from its GitHub repository and applies it to your Kubernetes cluster.
+If Metrics pods are not coming up lets update below args to the pod configuration
+```
+kubectl patch deployment metrics-server -n kube-system \
+  --type=json \
+  -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-insecure-tls"}]'
+```
+```
+kubectl patch deployment metrics-server -n kube-system \
+  --type=json \
+  -p='[{"op": "add", "path": "/spec/template/spec/containers/0/args/-", "value": "--kubelet-preferred-address-types=InternalIP"}]'
+```
+lets restart the pods
+```
+kubectl rollout restart deployment metrics-server -n kube-system
+```
+
 
 2. Verify Installation: After applying the manifest, verify that the Metrics Server pods are running successfully. You can check the pods in the kube-system namespace:
 
