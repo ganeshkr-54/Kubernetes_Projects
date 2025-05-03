@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: coupon-hunter
+spec:
+  containers:
+    - name: coupon-hunter-container
+      image: the_g1g1/hue-coupon-hunter
+      volumeMounts:
+        - mountPath: /coupons
+          name: coupons-volume
+      securityContext:
+        privileged: true
+  volumes:
+    - name: coupons-voulme
+      hostPath:
+        path: /etc/hue/data/coupons

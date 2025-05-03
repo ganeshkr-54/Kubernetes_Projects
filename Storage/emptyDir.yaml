@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: Scheduler
+spec:
+  containers:
+    - name: global-listener
+      image: g1g1/hue-global-listener:1.0
+      volumeMounts:
+        - mountPath: /notifications
+          name: shared-volume
+    - name: job-scheduler
+      image: g1g1/hue-job-scheduler:1.0
+      volumeMounts:
+        - mountPath: /incoming
+          name: shared-volume
+  volumes:
+    - name: shared-volume
+      emptyDir: {}
+        
