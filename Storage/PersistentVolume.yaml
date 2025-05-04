@@ -1,0 +1,28 @@
+apiVersion: v1 
+kind: PersistentVolume
+metadata:
+  name: local-pv
+  labels:
+    release: stage
+spec:
+  volumeMode: Filesystem
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: local-storage
+  persistentVolumeReclaimPolicy: Delete
+  local:
+    path: /mnt/disks/disk-1
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname  # This is a built-in node label automatically assigned by Kubernetes to every node — it holds the node’s name.
+              operator: in 
+              values:
+                - node02  # change according to your node name
+    
+  
+
+# 

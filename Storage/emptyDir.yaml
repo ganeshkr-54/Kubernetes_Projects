@@ -16,5 +16,6 @@ spec:
           name: shared-volume
   volumes:
     - name: shared-volume
-      emptyDir: {}
+      emptyDir: 
+       medium: Memory
         

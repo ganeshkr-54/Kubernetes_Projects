@@ -5,13 +5,15 @@ metadata:
 spec:
   containers:
     - name: coupon-hunter-container
-      image: the_g1g1/hue-coupon-hunter
+      image: nginx
       volumeMounts:
         - mountPath: /coupons
           name: coupons-volume
       securityContext:
         privileged: true
   volumes:
-    - name: coupons-voulme
+    - name: coupons-volume
       hostPath:
         path: /etc/hue/data/coupons
+
+        
