@@ -79,6 +79,7 @@ kubectl get pvc
   🥕 It’s important to realize that claims don’t mention volumes by name. You can’t claim
 specific volume. The matching is done by Kubernetes based on storage class, capacity, 
 and labels.
+
 🥕 Persistent volume claims belong to a namespace, all the pods that mount the persisten           
 volume claim must be from that claim’s namespace.
 
@@ -110,7 +111,7 @@ kubectl get pvc
 
 🥕 The key is in the persistentVolumeClaim. The claim uniquely identifies within the current namespace and makes it available as a volume. Then, the container can refer to it by its name and mount it to "/mnt/data”
 
-🥕 Before we create the pod it’s important to note that the persistent volume claim didn’t    actually claim any storage yet and **pvc status** would be in pending state. ( kubectl get pvc)
+🥕 Before we create the pod it’s important to note that the persistent volume claim didn’t actually claim any storage yet and **pvc status** would be in pending state. ( kubectl get pvc)
 
 🥕 Apply the pod config file, then claim will be bound to the pod.
 
