@@ -1,0 +1,67 @@
+### Network Policies in Azure Kubernetes Service
+
+Network policies provide micro-segmentation for pods just like Network Security Groups (NSGs) provide micro-segmentation for VMs. The Azure Network Policy Manager implementation supports the standard Kubernetes network policy specification. You can use labels to select a group of pods and define a list of ingress and egress rules to filter traffic to and from these pods🥕 By default all pods can reach each other
+
+🥕 Network policies can be seen as 🔥 firewall for pods
+
+🥕 NP can be used to restrict ⚠️ communication b/t pods
+
+Aks provides 3️⃣ options
+
+1.  Azure Network Policy Manager
+    
+2.  Calico
+    
+3.  Cilium
+    
+
+Lets use Azure NPM to manage pods network communication.
+
+Steps To Congigure Network Policy:
+
+1.  Networking → Under Overview → Select Network Policy Engine(as shown in below image) → Select Azure.
+    
+
+2\. Lets create ✌️ pods, initially they have default communication to each other
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   k run client --image nginxk run server --image nginx   `
+
+👉 lets login to one of the node and check if there are any iptable rules
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   kubectl debug node/aks-agentpool-43605416-vmss000001 -it --image=mcr.microsoft.com/cbl-mariner/busybox:2.0   `
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   chroot /host   `
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`# Check if there are any iptables rule exist` 
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   iptables -S | grep client   `
+
+We found no iptable rules
+
+> _Azure Network Policy configure_ _**iptables**_ _in order to achieve what network kubernetes asks for_
+
+✨ Now let connect to client pod and try to reach server pod
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   kk_lab_user_main-7d05079d5f4f475 [ ~ ]$ k exec -it client -- bashroot@client:/# curl --connect-timeout 10 10.244.0.12 #this is server ipWelcome to nginx!html { color-scheme: light dark; }body { width: 35em; margin: 0 auto;font-family: Tahoma, Verdana, Arial, sans-serif; }  Welcome to nginx! =================  If you see this page, the nginx web server is successfully installed andworking. Further configuration is required.     `
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   For online documentation and support please refer to[nginx.org](<http://nginx.org/>).   Commercial support is available at[nginx.com](<http://nginx.com/>).     `
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   _Thank you for using nginx._  root@client:/#   `
+
+**Client pod successfully connected to Server pod.**
+
+Now lets **create a network policy in server pod** to only allow traffic from pods with “app=client” lable.
+
+> _Current client pod has “run=client” lable_
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML
+
+🚫 Now connection is disconnected
+
+Now if we check iptables we found a rule to allow only specific traffic
+
+💡 Now lets add “app=client” lable to client pod and check connection again
+
+💫 Now again we are able to connect
+
+Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`kk_lab_user_main-7d05079d5f4f475 [ ~ ]$ k exec -it client -- bashroot@client:/# curl --connect-timeout 10 10.244.0.12Welcome to nginx!html { color-scheme: light dark; }body { width: 35em; margin: 0 auto;font-family: Tahoma, Verdana, Arial, sans-serif; }  Welcome to nginx! =================  If you see this page, the nginx web server is successfully installed andworking. Further configuration is required.  For online documentation and support please refer to[nginx.org](http://nginx.org/).   Commercial support is available at[nginx.com](http://nginx.com/).  _Thank you for using nginx._  root@client:/#`
